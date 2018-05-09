@@ -4,11 +4,16 @@
 
 var debug = process.argv[2]
 
+fs = require('fs');
+http = require('http');
+
 var hue = require("node-hue-api");
 var HueApi = require("node-hue-api").HueApi;
 var hostname = "192.168.0.101",
 username = "SdIlXGmbkKDtkdIQGNudKHYZ8LGmouMFi0v5AO9t",
 api = new HueApi(hostname, username);
+
+
 
 var exec = require('child_process').exec;
 
@@ -53,11 +58,11 @@ const colorName = [colors.Red, colors.Green, colors.Blue];
 var cLogSTDout = function(msg) { process.stdout.write(msg); };
 
 function cLogSTDColor(color = colors.Reset, msg) {
-    cLogSTDout(color + msg + colors.Reset);
+    //cLogSTDout(color + msg + colors.Reset);
 };
 
 var iCounter = 0;
-var iTickRateDefault = 150;
+var iTickRateDefault = 200;
 var iTickrate = iTickRateDefault;
 const iTickRateMin = 100;
 const iTickRateMax = 60000;
@@ -155,7 +160,7 @@ function statusLightGetXy(iLightNumber = 1){
         api.lightStatus(iLightNumber, function(err, result) {
             if (err) {
 				
-				//process.stdout.write(" errorXY ")
+				process.stdout.write(" errorXY ")
 				tickrateIncrease(100);
 				iTickRateDefault++;
 				throw err;
@@ -190,7 +195,7 @@ function statusLightGetXy(iLightNumber = 1){
 }
 
 
-function statusLightGetBri(iLightNumber = 1){
+function statusLightGetBri(iLightNumber = 2){
 
 	//process.stdout.write(".");
 			
@@ -199,7 +204,7 @@ function statusLightGetBri(iLightNumber = 1){
         api.lightStatus(iLightNumber, function(err, result) {
             if (err) {
 				
-				//process.stdout.write(" errorBRI ")
+				process.stdout.write(" errorBRI ")
 				tickrateIncrease(100);
 				iTickRateDefault++;
 				throw err;
@@ -218,7 +223,7 @@ function statusLightGetBri(iLightNumber = 1){
 }
 
 
-function statusLightGetRGB(iLightNumber = 1){
+function statusLightGetRGB(iLightNumber = 2){
 
 	//process.stdout.write(".");
 			
@@ -228,7 +233,7 @@ function statusLightGetRGB(iLightNumber = 1){
 	
             if (err) {
 				
-				//process.stdout.write(" errorRGB ")
+				process.stdout.write(" errorRGB ")
 				tickrateIncrease(100);
 				iTickRateDefault++;
 				throw err;
@@ -278,20 +283,20 @@ function xyBriToRgb(x = aXyNew[0], y = aXyNew[1], bri = iBriNew){
 	g = g * 255;   if (g < 0) { g = 255 };
 	b = b * 255;   if (b < 0) { b = 255 };
 
-	while ( r < bri && b < bri && g < bri ){
-		
-		if ( r < bri ){
-			r++;
-		}
-		
-		if ( g < bri ){
-			g++;
-		}
-		
-		if ( b < bri ){
-			b++;
-		}
-	}
+	//while ( ( r < bri ) && ( b < bri ) && ( g < bri ) ){
+	//	
+	//	if ( r < bri ){
+	//		r++;
+	//	}
+	//	
+	//	if ( g < bri ){
+	//		g++;
+	//	}
+	//	
+	//	if ( b < bri ){
+	//		b++;
+	//	}
+	//}
 	
 	//	if ( r < 100 ){
 	//		r = 0;
@@ -317,13 +322,13 @@ function xyBriToRgb(x = aXyNew[0], y = aXyNew[1], bri = iBriNew){
 	//		}	
 	//	}	
 	
-	aRgbNew[0] = r;
-	aRgbNew[1] = g;
-	aRgbNew[2] = b;
+	aRgbNew[0] = Math.round(r);
+	aRgbNew[1] = Math.round(g);
+	aRgbNew[2] = Math.round(b);
 }
 
 function LightTransitionDifferenceFade(){
-	const stepValue = [7, 3, 1];
+	const stepValue = [15, 7, 3, 1];
 	var aDifference = [0, 0, 0]
 	var stepError = [false, false, false];
 	
@@ -366,10 +371,17 @@ function LightTransitionDifferenceFade(){
 }
 
 function LightTransitionDifferenceSwitch(rgb,iLightTransitionStep = 1){
-	if( aRgbCur[rgb] > aRgbNew[rgb] ){
+
+    if ( ( iCounter % 50 ) == 0 ){
+		//console.log( "Reset" );
+        aRgbCur[rgb] = aRgbNew[rgb];
+		lightTransitionExec(rgb);
+    } else 
+    if( aRgbCur[rgb] > aRgbNew[rgb] ){
 		cLogSTDColor( colorName[rgb], "-" );
 		LightTransitionDown(rgb, iLightTransitionStep);
-	} else if ( aRgbCur[rgb] < aRgbNew[rgb] ){
+	} else 
+    if ( aRgbCur[rgb] < aRgbNew[rgb] ){
 		cLogSTDColor( colorName[rgb], "+" );
 		LightTransitionUp(rgb, iLightTransitionStep);
 	}
@@ -385,8 +397,9 @@ function LightTransitionUp(rgb,iLightTransitionStep = 1){
 	lightTransitionExec(rgb, iLightTransitionStep);
 }
 
-function lightTransitionExec(rgb,iLightTransitionStep = 1){
-    const GPIOPos = [17, 22, 25];
+function lightTransitionExec(rgb){
+    //const GPIOPos = [17, 22, 24];
+    const GPIOPos = [22, 17, 24];//Wires wrong connected
 	exec("/usr/local/bin/pigs p " + GPIOPos[rgb] + " " + aRgbCur[rgb]);		
 	aRgbOld[rgb] = aRgbCur[rgb];
 }
@@ -470,3 +483,121 @@ function apiLightStatus(iLightNumber,sItemName){
 
 
 
+/***************\
+| NodeJS Server |###############################################################################################################################################################################
+\***************/
+
+//server = http.createServer(function(req, res){
+//  console.log("Client connected");
+//
+//              fs.readFile( 'index.html', function(err, data){
+//              if (err){ return send404(res); };
+//              res.writeHead(200, {'Content-type': 'text/html'}); 
+//              res.write(data, 'utf8');
+//              //console.log(varArray[1]);
+//              res.end();
+//            });
+//
+//        //default: send404(res);
+//
+//}),
+
+var http = require('http')
+var url = require('url')
+var fs = require('fs')
+var path = require('path')
+var baseDirectory = __dirname   // or whatever base directory you want
+
+var port = 80
+
+server = http.createServer(function (request, response) {
+
+    console.log(request.url)
+    try {
+
+        if (request.url == '/'){
+            request.url = '/index.html';
+        }
+        
+        var requestUrl = url.parse(request.url)
+     
+        // need to use path.normalize so people can't access directories underneath baseDirectory
+        var fsPath = baseDirectory+path.normalize(requestUrl.pathname)
+
+        var fileStream = fs.createReadStream(fsPath)
+        fileStream.pipe(response)
+        fileStream.on('open', function() {
+             //response.writeHead(200)
+             response.writeHead(200, {'Content-type': 'text/html'});
+        })
+        fileStream.on('error',function(e) {
+             response.writeHead(404)     // assume the file doesn't exist
+             response.end()
+        })
+   } catch(e) {
+        response.writeHead(500)
+        response.end()     // end the response so browsers don't hang
+        console.log(e.stack)
+   }
+}).listen(port)
+
+console.log("listening on port "+port)
+
+
+
+// use socket.io
+var io = require('socket.io').listen(server);
+
+  //turn off debug
+  //io.set('log level', 0);
+
+  // define interactions with client
+  io.sockets.on('connection', function(socket){
+
+
+   // Will do something when its get triggerd by emitter
+   socket.on('power-off'       , function(data){ avr.SendCommand('power-off'                                      ); });
+   //███████╗███╗   ███╗██╗████████╗    ██╗   ██╗██████╗ ██████╗  █████╗ ████████╗███████╗███████╗
+   //██╔════╝████╗ ████║██║╚══██╔══╝    ██║   ██║██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝██╔════╝██╔════╝
+   //█████╗  ██╔████╔██║██║   ██║       ██║   ██║██████╔╝██║  ██║███████║   ██║   █████╗  ███████╗
+   //██╔══╝  ██║╚██╔╝██║██║   ██║       ██║   ██║██╔═══╝ ██║  ██║██╔══██║   ██║   ██╔══╝  ╚════██║
+   //███████╗██║ ╚═╝ ██║██║   ██║       ╚██████╔╝██║     ██████╔╝██║  ██║   ██║   ███████╗███████║
+   //╚══════╝╚═╝     ╚═╝╚═╝   ╚═╝        ╚═════╝ ╚═╝     ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝
+
+
+   // Send updates every second        
+   setInterval(function(){  
+       socket.emit('iCounter',iCounter);
+       socket.emit('iTickRateDefault',iTickRateDefault);
+       socket.emit('iTickrate',iTickrate);
+       socket.emit('iTickRateMin',iTickRateMin);
+       socket.emit('iTickRateMax',iTickRateMax);
+       socket.emit('stepNumber',stepNumber);
+       socket.emit('aRgbCur',aRgbCur);
+       socket.emit('aRgbNew',aRgbNew);
+       socket.emit('aRgbOld',aRgbOld);
+       socket.emit('iBriCur',iBriCur);
+       socket.emit('iBriNew',iBriNew);
+       socket.emit('bStatusCur',bStatusCur);
+       socket.emit('bStatusNew',bStatusNew);
+       socket.emit('iTransitionTimeCur',iTransitionTimeCur);
+       socket.emit('iTransitionTimeNew',iTransitionTimeNew);
+       socket.emit('iHueCur',iHueCur);
+       socket.emit('iHueNew',iHueNew);
+       socket.emit('iSatCur',iSatCur);
+       socket.emit('iSatNew',iSatNew);
+       socket.emit('sEffectCur',sEffectCur);
+       socket.emit('sEffectNew',sEffectNew);
+       socket.emit('aXyCur',aXyCur);
+       socket.emit('aXyNew',aXyNew);
+       socket.emit('iCtCur',iCtCur);
+       socket.emit('iCtNew',iCtNew);
+       socket.emit('sAlertCur',sAlertCur);
+       socket.emit('sAlertNew',sAlertNew);
+       socket.emit('sColorModeCur',sColorModeCur);
+       socket.emit('sColorModeNew',sColorModeNew);
+       socket.emit('bReachableCur',bReachableCur);
+       socket.emit('bReachableNew',bReachableNew);
+            
+   }, iTickrate);
+});

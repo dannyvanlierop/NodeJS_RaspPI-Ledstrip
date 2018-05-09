@@ -1,0 +1,94 @@
+﻿<html>
+
+
+  <head>
+    <title>Socket.io Test</title>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.2.0/json2html.min.js"></script>
+
+    <script> var socket = io.connect();
+
+    function AddRGBTable(oData, sVariableName){
+        var oCurrentValue = oData;
+        cellWidthR = Math.round(oData[0] / 2.54);
+        cellWidthG = Math.round(oData[1] / 2.54);
+        cellWidthB = Math.round(oData[2] / 2.54);
+        var result = '<table class="Style-Table-Main"style="width: 100%">'
+        result += '<tr><td class="Style-Table-Title">Red:' + oData[0] + '</td><td><table class="Style-Table-Sub-Red" style="width: ' + cellWidthR + '%"><tr><td><a id=aRgbCurR></a></td></tr></table></td></tr>'
+        result += '<tr><td class="Style-Table-Title">Green:' + oData[1] + '</td><td><table class="Style-Table-Sub-Green" style="width: ' + cellWidthG + '%"><tr><td><a id=aRgbCurR></a></td></tr></table></td></tr>'
+        result += '<tr><td class="Style-Table-Title">Blue:' + oData[2] + '</td><td><table class="Style-Table-Sub-Blue" style="width: ' + cellWidthB + '%"><tr><td><a id=aRgbCurR></a></td></tr></table></td></tr>'
+        result += '</table>';
+
+        document.getElementById('aRgbCurR').innerHTML = result;
+
+    }
+
+
+      socket.on('iCounter' ,function(data){ iCounter = data; $('#iCounter').text(data) ; });
+      socket.on('iTickRateDefault',function(data){ iTickRateDefault = data; $('#iTickRateDefault').text(data) ; });
+      socket.on('iTickrate',function(data){ iTickrate = data; $('#iTickrate').text(data) ; });
+      socket.on('stepNumber',function(data){ stepNumber = data; $('#stepNumber').text(data) ; });
+      
+      
+      socket.on('aRgbCur' ,function(data){ AddRGBTable(data, 'aRgbCur' ); });
+
+     
+    </script>
+
+
+  </head>
+  <body>
+
+
+<style type="text/css">
+
+.Style-Table-Title {
+	background-color: #CCCCCC;
+	height: 12px; 
+	width: 25px;
+	
+}
+
+.Style-Table-Main {
+	border-style: solid;
+	border-width: 1px;
+	background-color: #CCCCCC;
+}
+
+.Style-Table-Sub-Red {
+    background-color: rgb(255, 0, 0);
+}
+.Style-Table-Sub-Green {
+	background-color: rgb(0, 255, 0);
+}
+.Style-Table-Sub-Blue {
+background-color: rgb(0, 0, 255);
+}
+
+</style>
+
+<p>iCounter: <a id='iCounter'></a></p>
+<p>iTickRateDefault: <a id='iTickRateDefault'></a></p>
+<p>iTickrate: <a id='iTickrate'></a></p>
+<p>stepNumber: <a id='stepNumber'></a></p>
+<p id='aRgbCur'></p>
+<p id='aRgbCurR'></p>
+
+
+
+</table>
+</html> 
+
+
+
+
+
+
+
+
+
+
+
+
