@@ -7,7 +7,7 @@
         https://img.shields.io/badge/Open%20Source-Yes-green?style=plastic
     )
     ](
-        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver
+        https://github.com/dannyvanlierop/NodeJS_RaspPI_Ledstrip
     )
 [
     ![License: Mit](
@@ -17,38 +17,32 @@
     )
 [
     ![Contributors](
-        https://img.shields.io/github/contributors/dannyvanlierop/Cpp_ESPX_Async_Webserver?style=plastic)
+        https://img.shields.io/github/contributors/dannyvanlierop/NodeJS_RaspPI_Ledstrip?style=plastic)
     ](
-        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/graphs/contributors
+        https://github.com/dannyvanlierop/NodeJS_RaspPI_Ledstrip/graphs/contributors
     )
 [
     ![Forks](
-        https://img.shields.io/github/forks/dannyvanlierop/Cpp_ESPX_Async_Webserver?style=plastic)
+        https://img.shields.io/github/forks/dannyvanlierop/NodeJS_RaspPI_Ledstrip?style=plastic)
     ](
-        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/network/members
+        https://github.com/dannyvanlierop/NodeJS_RaspPI_Ledstrip/network/members
 	)
 [
     ![Stars](
-        https://img.shields.io/github/stars/dannyvanlierop/Cpp_ESPX_Async_Webserver?style=plastic)
+        https://img.shields.io/github/stars/dannyvanlierop/NodeJS_RaspPI_Ledstrip?style=plastic)
   ](
-        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/stargazers
+        https://github.com/dannyvanlierop/NodeJS_RaspPI_Ledstrip/stargazers
 	)
 [
     ![Issues](
-        https://img.shields.io/github/issues/dannyvanlierop/Cpp_ESPX_Async_Webserver?style=plastic)
+        https://img.shields.io/github/issues/dannyvanlierop/NodeJS_RaspPI_Ledstrip?style=plastic)
   ](
-        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/issues
+        https://github.com/dannyvanlierop/NodeJS_RaspPI_Ledstrip/issues
 	)
 
 &nbsp;<br>
-## Use:
+## Introduction
 <hr>
-
-Upload ino file to your device.
-
-</br>
-
-# Introduction
 I've already read a lot of tutorials explaining how to control a <b>RGB LED-Strip</b> with a Raspberry Pi. However, these were often unspecific, too technical, or even incorrect. Because of this I've written a short but simple tutorial explaining how to control a LED-Strip. This does not require much effort and even laymen should do it. After each step, there are also pictures of this one. The tutorial should work on all <b>Raspberry Pi</b> models.
 
 I will show this with a RGB LED-Strip based on <b>SMD5050</b> LED chips. Each of these chips contains a red, a green and a blue LED. Depending on which colors are activated, the result is a mixed color. If a specific color is set, typically the entire LED-Strip takes that one color.
@@ -59,9 +53,10 @@ The next possibility are LED-Strips with a WS281X controller (e.g. WS2812B), whi
 
 <b>Caution:</b> I'm not responsible for any damage to your LED-Strip or Raspberry Pi or any other damages. <b>Do this at your own risk!</b>
 
-</br>
+&nbsp;<br>
+## What is needed?
+<hr>
 
-# What is needed?
 Since I was often asked for purchase links, I will offer links for Amazon.com and eBay.com for the required components. Unfortunately, I cannot offer a link for all countries. Of course, local suppliers are also suitable.
 
 The following components are required:
@@ -84,10 +79,10 @@ The following components are required:
     `sudo apt-get install build-essential unzip wget`
     - PiGPIO can be downloaded and installed via the command chain</br>
     `wget http://abyz.co.uk/rpi/pigpio/pigpio.zip && unzip pigpio.zip && cd PIGPIO && sudo make install`
-    
-</br>
 
-# 1. Connecting the MOSFETs
+&nbsp;<br>
+## 1. Connecting the MOSFETs
+<hr>
 
 The MOSFETs take over the actual control of the LED-Strip. I do not want to go into the technical details of a MOSFET, as an expert certainly can do this better, but rather describe briefly, how it controls the LED-Strip.
 
@@ -101,16 +96,18 @@ Now the MOSFET can be connected:
   - Now all three MOSFETs are plugged onto the breadboard
   - Then the source pins are connected to the ground bus of the breadboard
 
-</br>
+&nbsp;<br>
+## 2. Connecting the LED-Strip
+<hr>
 
-# 2. Connecting the LED-Strip
 Next, the LED-Strip is connected to the MOSFETs:
 For this, the <b>Drain</b> pin of a MOSFET is connected to one of the three colors of the LED-Strip
 Also, a wire from the 12V pin of the LED-Strip is plugged into the supply voltage bus of the breadboard
 
-</br>
+&nbsp;<br>
+## 3. Connecting the Raspberry Pi
+<hr>
 
-# 3. Connecting the Raspberry Pi
 Each color of the LED-Strip requires only one GPIO pin of the Raspberry Pi as well as a common ground pin.
 
 Here is an overview of the GPIO pins of the Raspberry Pi:
@@ -123,9 +120,10 @@ Also, for each color one of the green pins of the Raspberry Pi (see figure above
     - GPIO22 for green
     - GPIO24 for blue
 
-</br>
+&nbsp;<br>
+## 4. Connecting the power jack
+<hr>
 
-# 4. Connecting the power jack
 The power jack is required to enable a secure connection to the power supply. The LED-Strip can consume a few amperes of current, so <b>never touch</b> the wires in operation! It is also important to note that the Raspberry Pi and the LED-Strip need <b>different power supplies</b> and must never be supplied with the same!
 
 - One wire is screwed to the ground and one to the voltage contact of the power jack
@@ -134,14 +132,16 @@ The power jack is required to enable a secure connection to the power supply. Th
 - Then the power supply can be plugged into the power jack
 - <b>Only</b> then the power supply should be plugged into the socket!
 
-</br>
+&nbsp;<br>
+## 5. Finished
+<hr>
 
-# 5. Finished
 That's it! Here are two pictures of the finished setup:
 
-</br>
+&nbsp;<br>
+## 6. Testing
+<hr>
 
-# 6. Testing
 The LED-Strip can now be tested using the <b>PiGPIO</b> software. For this, the brightness of a color is set in a range from 0 (off) to 255 (full brightness).
 
 With the following commands, in the Raspberry Pi terminal, you can light up the LED-Strip:
@@ -150,7 +150,9 @@ With the following commands, in the Raspberry Pi terminal, you can light up the 
 - `pigs p 22 128` - The brightness of green (pin 22) is set to 50% and the LEDs should be yellow
 - `pigs p 24 128` - The brightness of blue (pin 24) is set to 50% and the LEDs should be purple
 
-# What's next?
+&nbsp;<br>
+## What's next?
+<hr>
 
 Now you can do nearly everything with your RGB LED-Strip. For example, use <b>Python</b> to light up the LED-Strip, which can also be done with the PiGPIO software.
 
@@ -163,12 +165,11 @@ The brightness of a color can be set with the following commands, where <b>BRIGH
     …
     pi.stop()
 
-
 &nbsp;<br>
 ## License:
 <hr>
 
 For more details,
-see the [LICENSES](https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/blob/master/LICENSE) file.
+see the [LICENSES](https://github.com/dannyvanlierop/NodeJS_RaspPI_Ledstrip/blob/master/LICENSE) file.
 
 <br>&nbsp;
