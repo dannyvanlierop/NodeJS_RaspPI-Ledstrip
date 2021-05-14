@@ -1,17 +1,77 @@
-# RaspPI Ledstrip
+# NodeJS_RaspPI_Ledstrip
+ ESP32 and ESP8266 Async Webserver
 
-## [This information comes from source: dordnung.de :](https://dordnung.de/raspberrypi-ledstrip/) Thanks!
+&nbsp;<br>
+[
+    ![Open source](
+        https://img.shields.io/badge/Open%20Source-Yes-green?style=plastic
+    )
+    ](
+        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver
+    )
+[
+    ![License: Mit](
+        https://img.shields.io/badge/license-MIT-green.svg?style=plastic)
+    ](
+        https://en.wikipedia.org/wiki/MIT_License
+    )
+[
+    ![Contributors](
+        https://img.shields.io/github/contributors/dannyvanlierop/Cpp_ESPX_Async_Webserver?style=plastic)
+    ](
+        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/graphs/contributors
+    )
+[
+    ![Forks](
+        https://img.shields.io/github/forks/dannyvanlierop/Cpp_ESPX_Async_Webserver?style=plastic)
+    ](
+        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/network/members
+	)
+[
+    ![Stars](
+        https://img.shields.io/github/stars/dannyvanlierop/Cpp_ESPX_Async_Webserver?style=plastic)
+  ](
+        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/stargazers
+	)
+[
+    ![Issues](
+        https://img.shields.io/github/issues/dannyvanlierop/Cpp_ESPX_Async_Webserver?style=plastic)
+  ](
+        https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/issues
+	)
+
+&nbsp;<br>
+## Use:
+<hr>
+
+Upload ino file to your device.
+
+&nbsp;<br>
+## License:
+<hr>
+
+For more details,
+see the [LICENSES](https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/blob/master/LICENSE) file.
+
+<br>&nbsp;
+
+
+
+
+
+
+
 
 </br>
 
 # Introduction
-I've already read a lot of tutorials explaining how to control a <b>RGB LED-Strip</b> with a Raspberry Pi. However, these were often unspecific, too technical, or even incorrect. Because of this I've written a short but simple tutorial explaining how to control a LED-Strip. This does not require much effort and even laymen should do it. After each step, there are also pictures of this one. The tutorial should work on all <b>Raspberry Pi</b> models and is available in [English](https://dordnung.de/raspberrypi-ledstrip/en) as well as in [German](https://dordnung.de/raspberrypi-ledstrip/de).
+I've already read a lot of tutorials explaining how to control a <b>RGB LED-Strip</b> with a Raspberry Pi. However, these were often unspecific, too technical, or even incorrect. Because of this I've written a short but simple tutorial explaining how to control a LED-Strip. This does not require much effort and even laymen should do it. After each step, there are also pictures of this one. The tutorial should work on all <b>Raspberry Pi</b> models.
 
 I will show this with a RGB LED-Strip based on <b>SMD5050</b> LED chips. Each of these chips contains a red, a green and a blue LED. Depending on which colors are activated, the result is a mixed color. If a specific color is set, typically the entire LED-Strip takes that one color.
 
 There are also LED-Strips with <b>SMD3528</b> LED chips. Each of these chips has exactly one LED and thus only one color, and every third chip usually has the same color. Therefore, SMD3528 LED-Strips cannot be used to create a mixed color, but they can still be controlled according to this tutorial.
 
-The next possibility are LED-Strips with a WS281X controller (e.g. WS2812B), which are also known as Neopixel. They also have SMD5050 chips, which however can be controlled individually. But therefore, a different structure is required, which I'll explain [here](https://dordnung.de/raspberrypi-ledstrip/ws2812).
+The next possibility are LED-Strips with a WS281X controller (e.g. WS2812B), which are also known as Neopixel. They also have SMD5050 chips, which however can be controlled individually. But therefore, a different structure is required.
 
 <b>Caution:</b> I'm not responsible for any damage to your LED-Strip or Raspberry Pi or any other damages. <b>Do this at your own risk!</b>
 
@@ -108,8 +168,6 @@ With the following commands, in the Raspberry Pi terminal, you can light up the 
 
 # What's next?
 
-## [Visit the source from: dordnung.de :](https://dordnung.de/raspberrypi-ledstrip/) Thanks!
-
 Now you can do nearly everything with your RGB LED-Strip. For example, use <b>Python</b> to light up the LED-Strip, which can also be done with the PiGPIO software.
 
 The brightness of a color can be set with the following commands, where <b>BRIGHTNESS</b> should be specified in the range from 0 to 255, as already mentioned, and <b>PIN</b> is set to the GPIO pin number of one of the three colors. Here is a code example:
@@ -120,11 +178,5 @@ The brightness of a color can be set with the following commands, where <b>BRIGH
     pi.set_PWM_dutycycle(PIN, BRIGHTNESS)
     …
     pi.stop()
-
-
-I also made a small script in order to let the LEDs fade: [fading.py](https://github.com/dordnung/raspberrypi-ledstrip/blob/master/fading.py)
-
-Just put in your GPIO pin numbers of the three colors and then start the script with python [fading.py](https://github.com/dordnung/raspberrypi-ledstrip/blob/master/fading.py)
-
 
 
