@@ -46,22 +46,6 @@
 
 Upload ino file to your device.
 
-&nbsp;<br>
-## License:
-<hr>
-
-For more details,
-see the [LICENSES](https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/blob/master/LICENSE) file.
-
-<br>&nbsp;
-
-
-
-
-
-
-
-
 </br>
 
 # Introduction
@@ -180,3 +164,11 @@ The brightness of a color can be set with the following commands, where <b>BRIGH
     pi.stop()
 
 
+&nbsp;<br>
+## License:
+<hr>
+
+For more details,
+see the [LICENSES](https://github.com/dannyvanlierop/Cpp_ESPX_Async_Webserver/blob/master/LICENSE) file.
+
+<br>&nbsp;
